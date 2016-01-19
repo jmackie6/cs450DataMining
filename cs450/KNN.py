@@ -46,7 +46,6 @@ class Dataset:
     def convertData(self):
 
         le = preprocessing.LabelEncoder()
-        #ds = pd.read_csv('iris.csv', header=None)
 
         num_col = len(self.ds.columns)
 
@@ -91,9 +90,6 @@ class KNN:
 
         for n in range(self.nInputs):
 
-            #euclidian distance for each training vector from the current input n
-            #distances = np.sum((data-inputs[n,:])**2,axis=1)
-
             self.distances = [0] * int(len(self.data))
             print(self.distances)
             for j in range(len(self.data)):
@@ -112,9 +108,6 @@ class KNN:
                 self.closest_classes.insert(b, self.targets[indices[b]])
 
             self.posibilities= np.unique(self.closest_classes)
-
-            #classes = np.unique(dataClass[indices[:k]])
-
 
             # if all of the nearest neighbors are the same then we have found our prediction
             if self.k == 1:
@@ -144,9 +137,6 @@ iris = datasets.load_iris()
 iris_data = iris.data
 iris_targets = iris.target
 
-#iris_ds = Dataset(iris_data, iris_targets, .3, 42)
-#iris_ds = Dataset('iris.csv', .3, 42)
-#le = preprocessing.LabelEncoder()
 the_data_set = Dataset('iris.csv', .3, 42)
 
 nearestneighbor = KNN(3, the_data_set.data_train, the_data_set.target_train, the_data_set.data_test)
