@@ -12,9 +12,7 @@ from collections import defaultdict
 import sys
 import scipy.signal as sig
 import itertools
-# lst = np.full(len(cps), 0)
-# indices = sig.argrelmax(cps)
-# lst[indices] = cps[indices]
+
 
 class Dataset:
     def __init__(self, csv, test_size, random_state, convert_nominal=False):
@@ -125,8 +123,8 @@ class NeuralNetwork:
                 this_layer = []
                 #prompt user for num neurons in this layer
 
-                #num_neurons = int(input('Enter number of neurons: '))
-                num_neurons = 2
+                num_neurons = int(input('Enter number of neurons: '))
+                #num_neurons = 2
                 for j in range(num_neurons):
                     #make that many neurons in the layer
                     new_neuron = self.Neuron(layer_inputs)
@@ -159,16 +157,8 @@ class NeuralNetwork:
                     outputs.append(neuron.compute_activation(iteration_inputs))
                 iteration_inputs = (1, outputs)
 
-            #error = sum_of_squares_error(outputs) #will compare with targets
-            #go_back_and_change_weights(error)
             network_output.append(outputs)
 
-            # for list in network_output:
-            #     #print(np.argmax(list))
-            #     for number in list:
-            #         outputs2.append(number)
-            #         # print(np.argmax(number))
-            #         # print("count", list.count(number))
             network_max_outputs = []
             for item in itertools.chain(network_output):
                 network_max_outputs.append(np.argmax(item))
@@ -176,15 +166,26 @@ class NeuralNetwork:
         print(network_max_outputs)
 
         print(network_output, "COUNTER: ", counter)
+        percentage = []
+        #values = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
 
-        return network_max_outputs
+
+        list2 = network_max_outputs.count(1)
+        list3 = network_max_outputs.count(2)
+        list1 = network_max_outputs.count(0)
+        print("list1:", list1, "list2: ", list2, "list3: ", list3)
+
+        wholelist = list1 + list2 + list3
+        print("counted numebr", wholelist)
+        newNetwork = np.delete(network_max_outputs, [1], None)
+        return newNetwork
 
     class Neuron:
         def __init__(self, num_inputs):
             self.rangemax = 1.0
             self.rangemin = -1.0
             self.inputs = []
-            self.threshold = 0
+
             for i in range(num_inputs):
                 print("appending input number: ", i)
                 self.inputs.append(self.Input(random.uniform(self.rangemin, self.rangemax)))
@@ -209,14 +210,11 @@ class NeuralNetwork:
             return 1 / (1 + np.exp(x))
 
         def dsigmoid(self, y):
-            return y ( (1.0 - y))
+            return y(1.0 - y)
 
         class Input:
             def __init__(self, weight):
                 self.weight = weight
-
-
-
 
 print("**********************CSV**************************")
 
@@ -226,25 +224,9 @@ nn = NeuralNetwork(.3, my_dataset.data_train, my_dataset.target_train, my_datase
 
 nn.train_network()
 
-#print("predictions: ", nn)
 
-#acc_score = accuracy_score(my_dataset.target_test, nn.train_network())
+print("predictions: ", nn)
 
-#print("Accuracy of neural network() is: ", acc_score)
+acc_score = accuracy_score(my_dataset.data_test, nn.train_network())
 
-# for number in outputs2:
-        #     newList = []
-        #     if number == 0:
-        #         number == "Iris-setosa"
-        #         newList.append(number)
-        #     elif number == 1:
-        #         number == "Iris-versicolor"
-        #         newList.append(number)
-        #     elif number == 2:
-        #         number == "Iris-virginica"
-        #         newList.append(number)
-        #outputs3 = np.argpartition(outputs2, -104)[-104:]
-        #print(outputs2[outputs3])
-        #outputs4 = []
-        #outputs4 = outputs2[outputs3]
-        #print(outputs3)
+print("Accuracy of neural network() is: ", acc_score)
